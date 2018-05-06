@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASPProject.Models
 {
-	public class MJDbContext : DbContext
+	public class MJDbContext : IdentityDbContext<AppUser>
 	{
-		public MJDbContext() : base()
+		public MJDbContext(DbContextOptions options) : base(options)
 		{
 		}
 
@@ -28,8 +29,9 @@ namespace ASPProject.Models
 				.HasForeignKey(c => c.TeacherID);
 		}
 
+		public DbSet<Admin> Admins { get; set; }
 		public DbSet<Student> Students { get; set; }
-		public DbSet<Student> Teacher { get; set; }
+		public DbSet<Teacher> Teachers { get; set; }
 		public DbSet<Course> Courses { get; set; }
 		public DbSet<StudentCourse> StudentCourses { get; set; }
 	}

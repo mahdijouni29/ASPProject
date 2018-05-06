@@ -2,10 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ASPProject.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
 
 namespace ASPProject
 {
@@ -22,6 +26,21 @@ namespace ASPProject
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+			services.AddIdentity<AppUser, IdentityRole>(options =>
+			{
+				options.Password.RequireDigit = false;
+				options.Password.RequireLowercase = false;
+				options.Password.RequireUppercase = false;
+				options.Password.RequireNonAlphanumeric = false;
+				options.Password.RequiredLength = 1;
+			})
+				.AddEntityFrameworkStores<MJDbContext>()
+				.AddDefaultTokenProviders();
+
+			services.AddDbContext<MJDbContext>(options => options.UseSqlServer(@"Server=.\SQLEXPRESS;Database=ASPProject;Trusted_Connection=True;"));
+			//scope
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +58,7 @@ namespace ASPProject
 
             app.UseStaticFiles();
 
+			app.UseAuthentication();
             app.UseMvc();
         }
     }
